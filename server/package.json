@@ -1,0 +1,20 @@
+{
+  "name": "yawl-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MonkieeBoi https://github.com/MonkieeBoi",
+  "contributors": [
+    "Yunz https://github.com/yunz-dev/"
+  ],
+  "license": "GPL",
+  "description": "Yet Another Wish List API",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
