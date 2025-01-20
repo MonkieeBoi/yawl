@@ -1,4 +1,5 @@
 import express from 'express'
+import swaggerDocs from './utils/swagger.js'
 
 const port = process.env.SERVER_PORT || 7000;
 const app = express();
@@ -15,5 +16,9 @@ app.get("/heart", (req, res) => {
 
 app.listen(port, () => {
   connectDB();
+
+  // Serve swagger docs
+  swaggerDocs(app)
+
   console.log(`server started at https://localhost:${port}`);
 });
