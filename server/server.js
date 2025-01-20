@@ -1,4 +1,5 @@
 import express from 'express'
+import { connectDB } from './config/db.js';
 
 const port = process.env.SERVER_PORT || 7000;
 const app = express();
