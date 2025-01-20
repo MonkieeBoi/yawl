@@ -1,5 +1,6 @@
-import express from 'express'
-import swaggerDocs from './utils/swagger.js'
+import express from 'express';
+import { connectDB } from './config/db.js';
+import swaggerDocs from './utils/swagger.js';
 
 const port = process.env.SERVER_PORT || 7000;
 const app = express();
