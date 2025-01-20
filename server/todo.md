@@ -6,7 +6,7 @@
 - [ ] Read wishlist
 - [ ] Update wishlist
 - [ ] Delete wishlist
-- [ ] Authentication (jwc)
+- [ ] Authentication (jwt)
 
 ## Wishlist Items
 
