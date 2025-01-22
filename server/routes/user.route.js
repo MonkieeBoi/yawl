@@ -5,7 +5,7 @@ const userRouter = express.Router();
 
 /**
  * @openapi
- * /users/register:
+ * /api/users/register:
  *   post:
  *     description: Registers a user
  *     tags:
@@ -41,12 +41,24 @@ const userRouter = express.Router();
  *                   description: Error message
  *                   enum:
  *                     - Username already in use
+ *       500:
+ *         description: Registration failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Error message
+ *                   enum:
+ *                     - Registration failed
  */
-userRouter.post("/users/register", registerUser)
+userRouter.post("/api/users/register", registerUser)
 
 /**
  * @openapi
- * /users/login:
+ * /api/users/login:
  *   post:
  *     description: Logs a user in
  *     tags:
@@ -108,11 +120,11 @@ userRouter.post("/users/register", registerUser)
  *                   enum:
  *                     - Incorrect password
  */
-userRouter.post("/users/login", loginUser)
+userRouter.post("/api/users/login", loginUser)
 
 /**
  * @openapi
- * /users/logout:
+ * /api/users/logout:
  *   post:
  *     description: Logs out a user
  *     tags:
@@ -140,11 +152,11 @@ userRouter.post("/users/login", loginUser)
  *                   enum:
  *                     - Invalid session token
  */
-userRouter.post("/users/logout", logoutUser)
+userRouter.post("/api/users/logout", logoutUser)
 
 /**
  * @openapi
- * /users/delete:
+ * /api/users/delete:
  *   delete:
  *     description: Deletes a user
  *     tags:
@@ -182,6 +194,6 @@ userRouter.post("/users/logout", logoutUser)
  *                   enum:
  *                     - Invalid token or incorrect password
  */
-userRouter.delete("/users/delete/", deleteUser)
+userRouter.delete("/api/users/delete/", deleteUser)
 
 export default userRouter;
