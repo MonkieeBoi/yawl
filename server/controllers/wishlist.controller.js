@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import Item from '../models/wishlist.model.js';
 
-import { newWishlist, newWishlistItem, getWishlist, deleteWishlistItem, deleteWishlist, renameWishlist} from "../controllers/wishlist.controller.js"
 export const newWishlist = async (req, res) => {
   return
 }
