@@ -1,23 +1,41 @@
 import mongoose from "mongoose";
 import Item from '../models/item.model.js';
 
-// TODO: implement
-export const newItem = async (req, res) => {
-  const item = req.body;
+
+// FIX dodgy error handling
+export const newItemHelper = async (item) => {
 
   const newItem = new Item(item)
 
   if (!item.name || !item.image || !item.price || !item.url) {
-    return res.status(400).json({success:false, message: "Not all fields were provided"});
+    return 400
   }
 
   try {
     await newItem.save();
-    res.status(201).json({success:true, data: newItem});
+    return newItem
   } catch (error) {
     console.error("Error in new wishlist item:", error.message)
-    res.status(500).json({success: false, message: "Server Error"});
+    return 500
   }
+}
+
+// TODO: implement
+export const newItem = async (req, res) => {
+  const item = req.body;
+  const newItem = newItemHelper(item)
+  if (newItem === 500) {
+
+    res.status(500).json({success: false, message: "Server Error"});
+  } else if (newItem === 400) {
+
+    res.status(400).json({success: false, message: "Not all fields provided"});
+  } else {
+
+    res.status(201).json({success: true, data: item});
+  }
+
+
 }
 
 export const deleteItem = async (req, res) => {
