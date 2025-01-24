@@ -1,8 +1,23 @@
 import mongoose from "mongoose";
-import Item from '../models/wishlist.model.js';
+import Wishlist from '../models/wishlist.model.js';
 
 export const newWishlist = async (req, res) => {
-  return
+  const wishlistDetails = req.body;
+  wishlistDetails.items = []
+
+  const newWishlist = new Wishlist(wishlistDetails)
+
+  if (!wishlistDetails.name) {
+    return res.status(400).json({success:false, message: "Not all fields were provided"});
+  }
+
+  try {
+    await newWishlist.save();
+    res.status(201).json({success:true, data: newWishlist});
+  } catch (error) {
+    console.error("Error in new wishlist item:", error.message)
+    res.status(500).json({success: false, message: "Server Error"});
+  }
 }
 
 export const newWishlistItem = async (req, res) => {
