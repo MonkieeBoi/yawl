@@ -12,8 +12,8 @@ export const newItemHelper = async (item) => {
   }
 
   try {
-    await newItem.save();
-    return newItem
+    const data = await newItem.save();
+    return data._id
   } catch (error) {
     console.error("Error in new wishlist item:", error.message)
     return 500
@@ -23,7 +23,7 @@ export const newItemHelper = async (item) => {
 // TODO: implement
 export const newItem = async (req, res) => {
   const item = req.body;
-  const newItem = newItemHelper(item)
+  const newItem = await newItemHelper(item)
   if (newItem === 500) {
 
     res.status(500).json({success: false, message: "Server Error"});
@@ -32,7 +32,7 @@ export const newItem = async (req, res) => {
     res.status(400).json({success: false, message: "Not all fields provided"});
   } else {
 
-    res.status(201).json({success: true, data: item});
+    res.status(201).json({success: true, data: newItem});
   }
 
 
