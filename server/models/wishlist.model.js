@@ -5,6 +5,10 @@ const wishListSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  items:{
+    type: Array,
+    required: true
+  },
 }, {
     timestamps: true
   });
