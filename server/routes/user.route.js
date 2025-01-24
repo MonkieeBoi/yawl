@@ -1,5 +1,11 @@
 import express from "express";
-import { registerUser, loginUser, logoutUser, deleteUser } from "../controllers/user.controller.js"
+import verifyToken from "../utils/verifyJWT.js";
+import {
+  deleteUser,
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../controllers/user.controller.js";
 
 const userRouter = express.Router();
 
@@ -54,7 +60,7 @@ const userRouter = express.Router();
  *                   enum:
  *                     - Registration failed
  */
-userRouter.post("/api/users/register", registerUser)
+userRouter.post("/register", registerUser);
 
 /**
  * @openapi
@@ -120,7 +126,7 @@ userRouter.post("/api/users/register", registerUser)
  *                   enum:
  *                     - Incorrect password
  */
-userRouter.post("/api/users/login", loginUser)
+userRouter.post("/login", loginUser);
 
 /**
  * @openapi
@@ -152,7 +158,7 @@ userRouter.post("/api/users/login", loginUser)
  *                   enum:
  *                     - Invalid session token
  */
-userRouter.post("/api/users/logout", logoutUser)
+userRouter.post("/logout", verifyToken, logoutUser);
 
 /**
  * @openapi
@@ -194,6 +200,6 @@ userRouter.post("/api/users/logout", logoutUser)
  *                   enum:
  *                     - Invalid token or incorrect password
  */
-userRouter.delete("/api/users/delete/", deleteUser)
+userRouter.delete("/delete", verifyToken, deleteUser);
 
 export default userRouter;
