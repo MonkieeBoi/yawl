@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Wishlist from '../models/wishlist.model.js';
+import { newItemHelper } from "./item.controller.js";
 
 export const newWishlist = async (req, res) => {
   const wishlistDetails = req.body;
@@ -21,6 +22,18 @@ export const newWishlist = async (req, res) => {
 }
 
 export const newWishlistItem = async (req, res) => {
+  const item = req.body;
+  const newItem = newItemHelper(item)
+  if (newItem === 500) {
+
+    res.status(500).json({success: false, message: "Server Error"});
+  } else if (newItem === 400) {
+
+    res.status(400).json({success: false, message: "Not all fields provided"});
+  } else {
+
+    res.status(201).json({success: true, data: item});
+  }
   return
 }
 
@@ -29,10 +42,19 @@ export const getWishlist = async (req, res) => {
 }
 
 export const deleteWishlistItem = async (req, res) => {
+
   return
 }
 
 export const deleteWishlist = async (req, res) => {
+  const {id} = req.params
+  try {
+    await Wishlist.findByIdAndDelete(id);
+    res.status(200).json({success: true, message: `Deleted item with id: ${id}`});
+  } catch (error) {
+    res.status(404).json({success: false, message: "Not Found"});
+
+  }
   return
 }
 
