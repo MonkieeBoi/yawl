@@ -10,8 +10,8 @@
 
 <p align="center">
   <a href="#Features">Features</a> •
-  <a href="#Philosophy of the Project">Philosphy</a> •
-  <a href="#Tech Stack">Stack</a> •
+  <a href="#Philosophy-of-the-Project">Philosphy</a> •
+  <a href="#Tech-Stack">Stack</a> •
   <a href="#Install">Install</a> •
   <a href="#Contributors">Contributors</a>
 </p>
