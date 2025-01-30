@@ -9,6 +9,10 @@ const wishListSchema = new mongoose.Schema({
     type: Array,
     required: true
   },
+  author:{
+    type: String,
+    required: true
+  },
 }, {
     timestamps: true
   });
