@@ -7,4 +7,6 @@ router.post("/", newWishlist)
 
 router.delete("/:id", newWishlistItem)
 
+router.delete("/:wishlistId/item/:itemId", newWishlistItem)
+
 export default router;

@@ -13,6 +13,7 @@ export const newItemHelper = async (item) => {
 
   try {
     const data = await newItem.save();
+    console.log(data._id)
     return data._id
   } catch (error) {
     console.error("Error in new wishlist item:", error.message)

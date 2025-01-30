@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Wishlist from '../models/wishlist.model.js';
 import { newItemHelper } from "./item.controller.js";
+import Item from "../models/item.model.js";
 
 export const newWishlist = async (req, res) => {
   const wishlistDetails = req.body;
@@ -31,10 +32,8 @@ export const newWishlistItem = async (req, res) => {
 
     res.status(400).json({success: false, message: "Not all fields provided"});
   } else {
-
     res.status(201).json({success: true, data: item});
   }
-  return
 }
 
 export const getWishlist = async (req, res) => {
@@ -42,10 +41,26 @@ export const getWishlist = async (req, res) => {
 }
 
 export const deleteWishlistItem = async (req, res) => {
-
+  const {wishlistId} = req.params
+  const {itemId} = req.params
+  try {
+    const wishlist = await Wishlist.findById(wishlistId);
+    const index = wishlist.items.findIndex(x => x == itemId)
+    if (index !== -1) {
+      wishlist.item.splice(index, 1);
+      await Item.findByIdAndDelete(itemId)
+      wishlist.save()
+      res.status(200).json({success: true, message: `Deleted item with id: ${itemId}`});
+    } else {
+    res.status(404).json({success: false, message: "Item Not Found"});
+    }
+  } catch (error) {
+    res.status(404).json({success: false, message: "Wishlist Not Found"});
+  }
   return
 }
 
+// TODO make sure they are authed
 export const deleteWishlist = async (req, res) => {
   const {id} = req.params
   try {
@@ -55,7 +70,6 @@ export const deleteWishlist = async (req, res) => {
     res.status(404).json({success: false, message: "Not Found"});
 
   }
-  return
 }
 
 
