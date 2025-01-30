@@ -1,11 +1,11 @@
-// https://github.com/mui/material-ui/tree/v6.4.2/docs/data/material/getting-started/templates/sign-in
+// https://github.com/mui/material-ui/tree/v6.4.2/docs/data/material/getting-started/templates/sign-up
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -23,18 +23,18 @@ const Card = styled(MuiCard)(({ theme }) => ({
     padding: theme.spacing(4),
     gap: theme.spacing(2),
     margin: 'auto',
-    [theme.breakpoints.up('sm')]: {
-        maxWidth: '450px',
-    },
     boxShadow:
         'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+    [theme.breakpoints.up('sm')]: {
+        width: '450px',
+    },
     ...theme.applyStyles('dark', {
         boxShadow:
             'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
     }),
 }));
 
-const LoginContainer = styled(Stack)(({ theme }) => ({
+const SignUpContainer = styled(Stack)(({ theme }) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
     minHeight: '100%',
     padding: theme.spacing(2),
@@ -57,49 +57,33 @@ const LoginContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-export default function Login(props) {
-    const [nameError, setNameError] = React.useState(false);
-    const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+export default function SignUp(props) {
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleSubmit = (event) => {
-        if (nameError || passwordError) {
-            event.preventDefault();
-            return;
-        }
-        const data = new FormData(event.currentTarget);
-        console.log({
-            name: data.get('name'),
-            password: data.get('password'),
-        });
-        event.preventDefault();
-        // TODO: make api request to login
-    };
+    const [verifyPasswordError, setVerifyPasswordError] = React.useState(false);
+    const [verifyPasswordErrorMessage, setVerifyPasswordErrorMessage] = React.useState('');
+    const [nameError, setNameError] = React.useState(false);
+    const [nameErrorMessage, setNameErrorMessage] = React.useState('');
 
     const validateInputs = () => {
-        const name = document.getElementById('name');
+        const email = document.getElementById('email');
         const password = document.getElementById('password');
+        const passwordverify = document.getElementById('passwordverify');
+        const name = document.getElementById('name');
 
         let isValid = true;
 
-        if (!name.value || name.value.length < 1) {
-            setNameError(true);
-            setNameErrorMessage('Name is required.');
+        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
             isValid = false;
         } else {
-            setNameError(false);
-            setNameErrorMessage('');
+            setEmailError(false);
+            setEmailErrorMessage('');
         }
+
         if (!password.value || password.value.length < 6) {
             setPasswordError(true);
             setPasswordErrorMessage('Password must be at least 6 characters long.');
@@ -109,31 +93,58 @@ export default function Login(props) {
             setPasswordErrorMessage('');
         }
 
+
+        if (passwordverify.value != password.value) {
+            setVerifyPasswordError(true);
+            setVerifyPasswordErrorMessage('Passwords do not match');
+            isValid = false;
+        } else {
+            setVerifyPasswordError(false);
+            setVerifyPasswordErrorMessage('');
+        }
+        if (!name.value || name.value.length < 1) {
+            setNameError(true);
+            setNameErrorMessage('Name is required.');
+            isValid = false;
+        } else {
+            setNameError(false);
+            setNameErrorMessage('');
+        }
+
         return isValid;
+    };
+
+    const handleSubmit = (event) => {
+        if (nameError || emailError || passwordError || verifyPasswordError) {
+            event.preventDefault();
+            return;
+        }
+        const data = new FormData(event.currentTarget);
+        console.log({
+            name: data.get('name'),
+            email: data.get('email'),
+            password: data.get('password'),
+        });
+        event.preventDefault();
+        // TODO: make api request to signup
     };
 
     return (
         <>
             <CssBaseline enableColorScheme />
-            <LoginContainer direction="column" justifyContent="space-between">
+            <SignUpContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
                     <Typography
                         component="h1"
                         variant="h4"
                         sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
                     >
-                        Login
+                        Sign up
                     </Typography>
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
-                        noValidate
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: '100%',
-                            gap: 2,
-                        }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                     >
                         <FormControl>
                             <FormLabel htmlFor="name">Username</FormLabel>
@@ -150,50 +161,78 @@ export default function Login(props) {
                             />
                         </FormControl>
                         <FormControl>
+                            <FormLabel htmlFor="email">Email</FormLabel>
+                            <TextField
+                                required
+                                fullWidth
+                                id="email"
+                                placeholder="your@email.com"
+                                name="email"
+                                autoComplete="email"
+                                variant="outlined"
+                                error={emailError}
+                                helperText={emailErrorMessage}
+                                color={passwordError ? 'error' : 'primary'}
+                            />
+                        </FormControl>
+                        <FormControl>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <TextField
-                                error={passwordError}
-                                helperText={passwordErrorMessage}
+                                required
+                                fullWidth
                                 name="password"
                                 placeholder="••••••"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
-                                autoFocus
-                                required
-                                fullWidth
+                                autoComplete="new-password"
                                 variant="outlined"
+                                error={passwordError}
+                                helperText={passwordErrorMessage}
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
-                        {/* <FormControlLabel */}
-                        {/*     control={<Checkbox value="remember" color="primary" />} */}
-                        {/*     label="Remember me" */}
-                        {/* /> */}
+                        <FormControl>
+                            <FormLabel htmlFor="passwordverify">Password Confirmation</FormLabel>
+                            <TextField
+                                required
+                                fullWidth
+                                name="passwordverify"
+                                placeholder="••••••"
+                                type="password"
+                                id="passwordverify"
+                                autoComplete="new-password"
+                                variant="outlined"
+                                error={verifyPasswordError}
+                                helperText={verifyPasswordErrorMessage}
+                                color={verifyPasswordError ? 'error' : 'primary'}
+                            />
+                        </FormControl>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             onClick={validateInputs}
                         >
-                            Login
+                            Sign up
                         </Button>
                     </Box>
-                    <Divider>or</Divider>
+                    <Divider>
+                        <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+                    </Divider>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Typography sx={{ textAlign: 'center' }}>
-                            Don&apos;t have an account?{' '}
+                            Already have an account?{' '}
                             <Link
-                                href="/signup"
+                                href="/login"
                                 variant="body2"
                                 sx={{ alignSelf: 'center' }}
                             >
-                                Sign up
+                                Login
                             </Link>
                         </Typography>
                     </Box>
                 </Card>
-            </LoginContainer>
+            </SignUpContainer>
         </>
     );
 }
