@@ -1,11 +1,9 @@
 // https://github.com/mui/material-ui/tree/v6.4.2/docs/data/material/getting-started/templates/sign-up
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -14,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
+import { redirect, useNavigate } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -58,14 +57,15 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props) {
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [verifyPasswordError, setVerifyPasswordError] = React.useState(false);
-    const [verifyPasswordErrorMessage, setVerifyPasswordErrorMessage] = React.useState('');
-    const [nameError, setNameError] = React.useState(false);
-    const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const [verifyPasswordError, setVerifyPasswordError] = useState(false);
+    const [verifyPasswordErrorMessage, setVerifyPasswordErrorMessage] = useState('');
+    const [nameError, setNameError] = useState(false);
+    const [nameErrorMessage, setNameErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const validateInputs = () => {
         const email = document.getElementById('email');
@@ -114,19 +114,65 @@ export default function SignUp(props) {
         return isValid;
     };
 
+    const loginApi = (username, password) =>  {
+        fetch("/api/users/login", {
+            method: "POST",
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                let { message } = data;
+                if (!message) {
+                    navigate("/");
+                    return;
+                }
+                alert(message);
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+    }
+
+    const signupApi = (username, email, password) => {
+        fetch("/api/users/register", {
+            method: "POST",
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                let { message } = data;
+                if (!message) {
+                    loginApi(username, password);
+                    return;
+                }
+                alert(message);
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     const handleSubmit = (event) => {
         if (nameError || emailError || passwordError || verifyPasswordError) {
             event.preventDefault();
             return;
         }
         const data = new FormData(event.currentTarget);
-        console.log({
-            name: data.get('name'),
-            email: data.get('email'),
-            password: data.get('password'),
-        });
         event.preventDefault();
-        // TODO: make api request to signup
+
+        signupApi(data.get('name'), data.get('email'), data.get('password'))
     };
 
     return (

@@ -1,10 +1,8 @@
 // https://github.com/mui/material-ui/tree/v6.4.2/docs/data/material/getting-started/templates/sign-in
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
@@ -14,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -58,19 +57,38 @@ const LoginContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Login(props) {
-    const [nameError, setNameError] = React.useState(false);
-    const [nameErrorMessage, setNameErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
+    const [nameError, setNameError] = useState(false);
+    const [nameErrorMessage, setNameErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const navigate = useNavigate();
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const loginApi = (username, password) => {
+        fetch("/api/users/login", {
+            method: "POST",
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+        })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                let { message } = data;
+                if (!message) {
+                    navigate("/");
+                    return;
+                }
+                alert(message);
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+    }
 
     const handleSubmit = (event) => {
         if (nameError || passwordError) {
@@ -78,12 +96,8 @@ export default function Login(props) {
             return;
         }
         const data = new FormData(event.currentTarget);
-        console.log({
-            name: data.get('name'),
-            password: data.get('password'),
-        });
         event.preventDefault();
-        // TODO: make api request to login
+        loginApi(data.get('name'), data.get('password'))
     };
 
     const validateInputs = () => {
