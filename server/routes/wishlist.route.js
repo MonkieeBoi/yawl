@@ -9,4 +9,6 @@ router.delete("/:id", newWishlistItem)
 
 router.delete("/:wishlistId/item/:itemId", newWishlistItem)
 
+router.get("/:wishlistId", getWishlist)
+
 export default router;

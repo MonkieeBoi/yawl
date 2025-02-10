@@ -37,6 +37,17 @@ export const newWishlistItem = async (req, res) => {
 }
 
 export const getWishlist = async (req, res) => {
+  const {wishlistId} = req.params
+  try {
+    const wishlist = await Wishlist.findById(wishlistId);
+    if (wishlist) {
+      res.status(200).json({success: true, data: wishlist});
+    } else {
+    res.status(404).json({success: false, message: "Wishlist Not Found"});
+    }
+  } catch (error) {
+    res.status(404).json({success: false, message: "Wishlist Not Found"});
+  }
   return
 }
 
