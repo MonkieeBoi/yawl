@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -60,6 +60,31 @@ function ResponsiveAppBar() {
     handleCloseUserMenu();
   }
 
+  const checkLoginStatus = async () => {
+    try {
+      // TODO: Change api request endpoint
+      const response = await fetch("http://localhost:7000/api/users/isLoggedIn", {
+        method: "GET",
+        credentials: "include",
+      });
+  
+      const data = await response.json();
+  
+      if (data.loggedIn) {
+        setLogged(true);
+      } else {
+        setLogged(false);
+      }
+    } catch (error) {
+      setLogged(false);
+    }
+  };
+  
+  
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+  
   return (
     <AppBar position="static">
       <Container maxWidth="xl">

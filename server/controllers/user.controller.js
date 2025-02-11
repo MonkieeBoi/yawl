@@ -101,3 +101,24 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({ message: "Failed to delete user" });
   }
 };
+
+export const isLoggedIn = async (req, res) => {
+  const token = req.cookies.session_token;
+
+  if (!token) {
+    return res.status(401).json({ loggedIn: false, message: "Not authenticated" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ loggedIn: false, message: "User not found" });
+    }
+
+    return res.status(200).json({ loggedIn: true, user });
+  } catch (error) {
+    return res.status(401).json({ loggedIn: false, message: "Invalid or expired token" });
+  }
+}
