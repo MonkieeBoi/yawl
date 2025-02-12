@@ -21,8 +21,8 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [logged, setLogged] = useState(false);
-  // TODO: Add all pages required
-  const pages = ['Home', 'Wishlists', 'Account'];
+  
+  const pages = logged ? ['Home', 'Wishlists', 'Account'] : ['Home'];
   const settings = logged ? ['Profile', 'Account', 'Logout'] : ['Login', 'Sign Up'];
 
   const handleOpenNavMenu = (event) => {
@@ -52,7 +52,7 @@ function ResponsiveAppBar() {
     handleCloseUserMenu();
   }
 
-  // TODO: Add all page navigation required and logged in feature
+  // TODO: Add all page navigation required
   const handleNavMenuClick = (page) => {
     if (page === "Home") navigate("/")
     if (page === "Wishlists") navigate("/wishlists");
@@ -62,14 +62,11 @@ function ResponsiveAppBar() {
 
   const checkLoginStatus = async () => {
     try {
-      // TODO: Change api request endpoint
-      const response = await fetch("http://localhost:7000/api/users/isLoggedIn", {
+      const response = await fetch("/api/users/isLoggedIn", {
         method: "GET",
         credentials: "include",
       });
-  
       const data = await response.json();
-  
       if (data.loggedIn) {
         setLogged(true);
       } else {
@@ -80,8 +77,10 @@ function ResponsiveAppBar() {
     }
   };
   
-  
+  // TODO: Fix the useEffect 
+  checkLoginStatus();
   useEffect(() => {
+    console.log("useEffect is running")
     checkLoginStatus();
   }, []);
   
