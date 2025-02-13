@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  isLoggedIn
 } from "../controllers/user.controller.js";
 
 const userRouter = express.Router();
@@ -201,5 +202,30 @@ userRouter.post("/logout", verifyToken, logoutUser);
  *                     - Invalid token or incorrect password
  */
 userRouter.delete("/delete", verifyToken, deleteUser);
+
+/**
+ * @openapi
+ * /api/users/isLoggedIn:
+ *   get:
+ *     description: Checks if the user is logged in
+ *     tags:
+ *       - Users
+ *     responses:
+ *       200:
+ *         description: User is authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 loggedIn:
+ *                   type: boolean
+ *                 user:
+ *                   type: object
+ *                   description: User information
+ *       401:
+ *         description: User is not authenticated
+ */
+userRouter.get("/isLoggedIn", isLoggedIn);
 
 export default userRouter;
