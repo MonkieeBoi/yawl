@@ -22,7 +22,7 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [logged, setLogged] = useState(false);
   
-  const pages = logged ? ['Home', 'Wishlists', 'Account'] : ['Home'];
+  const pages = logged ? ['Home', 'Wishlists', 'Profile'] : ['Home'];
   const settings = logged ? ['Profile', 'Account', 'Logout'] : ['Login', 'Sign Up'];
 
   const handleOpenNavMenu = (event) => {
@@ -56,7 +56,7 @@ function ResponsiveAppBar() {
   const handleNavMenuClick = (page) => {
     if (page === "Home") navigate("/")
     if (page === "Wishlists") navigate("/wishlists");
-    if (page === "Account") navigate("/account");
+    if (page === "Profile") navigate("/profile");
     handleCloseUserMenu();
   }
 
