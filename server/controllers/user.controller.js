@@ -122,3 +122,27 @@ export const isLoggedIn = async (req, res) => {
     return res.status(401).json({ loggedIn: false, message: "Invalid or expired token" });
   }
 }
+
+export const updateProfilePicture = async (req, res) => {
+  const userId = req.userId;
+  const profile_url = req.body.profile_url;
+
+  if (!(userId && profile_url)) {
+    return res.status(422).json({ message: "Not all fields were provided" });
+  }
+
+  try {
+    const response = await User.updateOne({ _id: userId }, { profilePicture: profile_url });
+
+    if (response.modifiedCount === 1) {
+      return res.sendStatus(200);
+    } else if (response.matchedCount === 1) {
+      return res.status(409).json({ message: "Attempted to set same profile picture" });
+    } else if (response.matchedCount === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(500).json({ message: "Failed to update profile picture" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to update profile picture" });
+  }
+};
