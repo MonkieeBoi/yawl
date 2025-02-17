@@ -1,5 +1,5 @@
 import express from "express";
-import { newWishlist, newWishlistItem, getWishlist, deleteWishlistItem, deleteWishlist, renameWishlist} from "../controllers/wishlist.controller.js"
+import { newWishlist, newWishlistItem, getWishlistById, getWishlistByAuthor, deleteWishlistItem, deleteWishlist, renameWishlist} from "../controllers/wishlist.controller.js"
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ router.delete("/:id", newWishlistItem)
 
 router.delete("/:wishlistId/item/:itemId", newWishlistItem)
 
-router.get("/:wishlistId", getWishlist)
+router.get("/:wishlistId", getWishlistById)
+
+router.get("/:author/wishlists", getWishlistByAuthor)
 
 export default router;
