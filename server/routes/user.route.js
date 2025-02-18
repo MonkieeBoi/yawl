@@ -5,7 +5,8 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-  isLoggedIn
+  isLoggedIn,
+  updateProfilePicture
 } from "../controllers/user.controller.js";
 
 const userRouter = express.Router();
@@ -227,5 +228,60 @@ userRouter.delete("/delete", verifyToken, deleteUser);
  *         description: User is not authenticated
  */
 userRouter.get("/isLoggedIn", isLoggedIn);
+
+
+/**
+ * @openapi
+ * /api/users/updateProfilePicture:
+ *   put:
+ *     description: updates a user's profile picture
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: cookie
+ *         name: session_token
+ *         description: Session token
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: body
+ *         name: profile_url
+ *         description: url for profile picture 
+ *         schema:
+ *           type: object
+ *           required:
+ *             - profile_url
+ *           properties:
+ *             profile_url:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Profile picture updated
+ *       409:
+ *         description: Attempted to set same profile picture
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Error message
+ *                   enum:
+ *                     - Attempted to set same profile picture
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Error message
+ *                   enum:
+ *                     - User not found
+ */
+userRouter.put("/updateProfilePicture", verifyToken, updateProfilePicture);
 
 export default userRouter;
