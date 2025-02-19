@@ -37,15 +37,16 @@ export const newWishlistItem = async (req, res) => {
   }
 }
 
-export const getWishlistByUser = async (req, res) => {
+export const getWishlistIdsByUser = async (req, res) => {
   const {username} = req.params
   try {
-    const user = await User.findOne({ username }).populate("wishlist");
+    const user = await User.findOne({ username });
 
     if (user) {
       res.status(200).json({success: true, data: user.wishlist}); 
+    } else {
+      res.status(404).json({success: false, message: "User not found" });
     }
-    res.status(404).json({success: false, message: "User not found" });
   } catch (error) {
     res.status(404).json({success: false, message: "User not found" });;
   }
