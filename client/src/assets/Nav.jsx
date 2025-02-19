@@ -40,11 +40,24 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const apiLogout = async () => {
+    try {
+      const response = await fetch("/api/users/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (response.ok) {
+        setLogged(false);
+      }
+    } catch (error) {
+    }
+  }
+
   const handleUserMenuClick = (setting) => {
     if (setting === "Profile") navigate("/profile");
     if (setting === "Account") navigate("/account");
     if (setting === "Logout") {
-      setLogged(false);
+      apiLogout();
       navigate("/")
     }
     if (setting === "Login") navigate("/login")
