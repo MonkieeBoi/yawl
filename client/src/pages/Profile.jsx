@@ -1,8 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Grid2, Box, Avatar, Typography } from "@mui/material";
 import Wishlist from "../assets/Wishlist.jsx"
 
 export default function Profile() {
+
+  const [wishlistIds, setWishlistIds] = useState([]);
+  const [currentWishlistIds, setCurrentWishlistIds] = useState([]);
+  const getWishlistsIds = async () => {
+    try {
+      const logInResponse = await fetch("/api/users/isLoggedIn", {
+        method: "GET",
+        credentials: "include",
+      });
+      const logInData = await logInResponse.json();
+      if (logInData.loggedIn) {
+        try {
+          const username = logInData.user.username;
+          const wishListIdResponse = await fetch(`/api/wishlist/${username}/wishlists`);
+          setWishlistIds(wishListIdResponse.data);
+          setCurrentWishlistIds(wishlistIds.slice(0, 3)); // keep 3 wishlists in the current rotation
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getWishlistsIds();
+
   return (
     <Container maxWidth="md">
       <Box sx={{ textAlign: "center", my: 4 }}>
@@ -11,9 +38,9 @@ export default function Profile() {
         <Typography variant="body2" color="text.secondary">Use Descriptions</Typography>
       </Box>
       <Grid2 container spacing={3}>
-        {[1, 2, 3, 4, 5, 6].map((item) => (
-          <Grid2 item xs={12} sm={6} md={4} key={item}>
-            <Wishlist></Wishlist>
+        {currentWishlistIds.map((id) => (
+          <Grid2 item xs={4} sm={4} md={4} key={id}>
+            <Wishlist wishlistId={id} />
           </Grid2>
         ))}
       </Grid2>
