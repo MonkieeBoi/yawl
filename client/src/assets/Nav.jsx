@@ -70,17 +70,29 @@ function ResponsiveAppBar() {
       if (data.loggedIn) {
         setLogged(true);
       } else {
+        deleteCookie();
         setLogged(false);
       }
     } catch (error) {
+      deleteCookie();
       setLogged(false);
     }
   };
+
+  const deleteCookie = async () => {
+    try {
+      await fetch("/api/users/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   // TODO: Fix the useEffect 
   checkLoginStatus();
   useEffect(() => {
-    console.log("useEffect is running")
     checkLoginStatus();
   }, []);
   

@@ -3,45 +3,50 @@ import { Container, Grid2, Box, Avatar, Typography, Pagination } from "@mui/mate
 import Wishlist from "../assets/Wishlist.jsx";
 
 export default function Profile() {
-  const username = "Guest User";
   const [wishlistIds, setWishlistIds] = useState([0]);
+  const [username, setUsername] = useState("Guest User");
   const [page, setPage] = useState(1);
-  const itemsPerPage = 3;
 
+  const itemsPerPage = 3;
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentWishlistIds = wishlistIds.slice(startIndex, endIndex);
-  
-  useEffect(() => {
-    const getWishlistsIds = async () => {
-      try {
-        const logInResponse = await fetch("/api/users/isLoggedIn", {
-          method: "GET",
-          credentials: "include",
-        });
-        const logInData = await logInResponse.json();
-
-        if (logInData.loggedIn) {
-          try {
-            username = logInData.user.username;
-            const wishListIdResponse = await fetch(`/api/wishlist/${username}/wishlists`);
-            const wishListData = await wishListIdResponse.json(); 
-            setWishlistIds(wishListData.data); 
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getWishlistsIds();
-  }, []);
 
   const handlePageChange = (_, value) => {
     setPage(value);
   };
+  
+  const getWishlistsIds = async () => {
+    try {
+      const logInResponse = await fetch("/api/users/isLoggedIn", {
+        method: "GET",
+        credentials: "include",
+      });
+      const logInData = await logInResponse.json();
+      if (logInData.loggedIn) {
+        try {
+          setUsername(logInData.user.username);
+          const wishListIdResponse = await fetch(`/api/wishlist/${logInData.user.username}/wishlists`);
+          const wishListIdData = await wishListIdResponse.json();
+          if (wishListIdData.success === true && wishListIdData.data.length > 0) {
+            setWishlistIds(wishListIdData.data); 
+          } else {
+            setWishlistIds([1, 2, 3, 4,5]); 
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getWishlistsIds();
+  }, []);
+
+
 
   return (
     <Container maxWidth="md">
