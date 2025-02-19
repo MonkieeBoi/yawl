@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Wishlist from '../models/wishlist.model.js';
 import { newItemHelper } from "./item.controller.js";
 import Item from "../models/item.model.js";
+import User from "../models/user.model.js";
 
 export const newWishlist = async (req, res) => {
   const wishlistDetails = req.body;
@@ -36,19 +37,20 @@ export const newWishlistItem = async (req, res) => {
   }
 }
 
-export const getWishlistByAuthor = async (req, res) => {
-  const {wishlistAuthor} = req.params
+export const getWishlistByUser = async (req, res) => {
+  const {username} = req.params
   try {
-    const wishlists = await Wishlist.find({author: wishlistAuthor});
-    if (wishlists) {
-      return res.status(200).json({success: true, data: wishlists})
-    } else {
-      res.status(404).json({success: false, message: "Wishlists Not Found"})
+    const user = await User.findOne({ username }).populate("wishlist");
+
+    if (user) {
+      res.status(200).json({success: true, data: user.wishlist}); 
     }
+    res.status(404).json({success: false, message: "User not found" });
   } catch (error) {
-    res.status(404).json({success: false, message: "Wishlists Not Found"});
+    res.status(404).json({success: false, message: "User not found" });;
   }
-}
+  return
+};
 
 export const getWishlistById = async (req, res) => {
   const {wishlistId} = req.params
