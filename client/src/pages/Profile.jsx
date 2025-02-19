@@ -3,6 +3,7 @@ import { Container, Grid2, Box, Avatar, Typography, Pagination } from "@mui/mate
 import Wishlist from "../assets/Wishlist.jsx";
 
 export default function Profile() {
+  const username = "Guest User";
   const [wishlistIds, setWishlistIds] = useState([0]);
   const [page, setPage] = useState(1);
   const itemsPerPage = 3;
@@ -22,7 +23,7 @@ export default function Profile() {
 
         if (logInData.loggedIn) {
           try {
-            const username = logInData.user.username;
+            username = logInData.user.username;
             const wishListIdResponse = await fetch(`/api/wishlist/${username}/wishlists`);
             const wishListData = await wishListIdResponse.json(); 
             setWishlistIds(wishListData.data); 
@@ -46,7 +47,7 @@ export default function Profile() {
     <Container maxWidth="md">
       <Box sx={{ textAlign: "center", my: 4 }}>
         <Avatar sx={{ width: 100, height: 100, margin: "auto" }} src="imgs/profile-photo.png" />
-        <Typography variant="h5" mt={2}>User Name</Typography>
+        <Typography variant="h5" mt={2}>{username}</Typography>
         <Typography variant="body2" color="text.secondary">Wishlists</Typography>
       </Box>
 
