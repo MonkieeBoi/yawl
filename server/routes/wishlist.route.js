@@ -11,6 +11,6 @@ router.delete("/:wishlistId/item/:itemId", newWishlistItem)
 
 router.get("/:wishlistId", getWishlistById)
 
-router.get("/:author/wishlists", getWishlistByAuthor)
+router.get("/:username/wishlists", getWishlistByAuthor)
 
 export default router;
