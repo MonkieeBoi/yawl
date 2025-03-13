@@ -101,5 +101,28 @@ export const deleteWishlist = async (req, res) => {
 
 
 export const renameWishlist = async (req, res) => {
-  return
-}
+  const { userId } = req;
+  const { id, name } = req.body;
+
+  if (!(id && name)) {
+    return res.status(422).json({ message: "Not all fields were provided" });
+  }
+
+  try {
+    const wishlist = await Wishlist.findById(id);
+
+    if (!wishlist) {
+      return res.status(404).json({ message: "Wishlist not found" });
+    }
+
+    if (wishlist.author != userId) {
+      return res.status(401).json({ message: "Wishlist not owned by current user" });
+    }
+
+    wishlist.name = name;
+    await wishlist.save();
+    return res.sendStatus(200);
+  } catch (e) {
+    return res.status(500).json({ message: "Failed to rename wishlist" });
+  }
+};
